@@ -1,40 +1,31 @@
 # General Imports
-from typing import AsyncGenerator
+import psycopg
+from langchain_core.messages import AIMessage
 from langgraph.graph import StateGraph,START,END
-from langchain_core.messages import HumanMessage
-from langchain_google_genai import ChatGoogleGenerativeAI
+from langgraph.checkpoint.postgres import PostgresSaver
 
 # Package Imports
+# from app.core import app_config
 from app.core import app_config
-from app.models import ChatState
-
-llm = ChatGoogleGenerativeAI(
-    model = "gemini-2.5-flash",
-    google_api_key = app_config.google_api_key,
-    streaming = True
-)
+from app.models import ChatState,chat_model
 
 def chat_node(state: ChatState)-> ChatState:
     """Takes user query and send it to LLM and returns response"""
     messages = state["messages"]
-    response = llm.invoke(messages[-1].content)
-    return {"messages": [response]}
+    response = chat_model.invoke(messages).content
+    return {"messages": [AIMessage(content = response)]}
 
-graph = StateGraph(ChatState)
-graph.add_node("chat_node",chat_node)
-graph.add_edge(START,"chat_node")
-graph.add_edge("chat_node",END)
+def create_graph()-> StateGraph:
+    conn = psycopg.connect(f"postgresql://{app_config.postgres_user}:{app_config.postgres_password}@localhost/{app_config.postgres_db}", autocommit = True)
+    checkpointer = PostgresSaver(conn = conn)
+    checkpointer.setup()
 
-chatbot = graph.compile()
+    graph = StateGraph(ChatState)
+    graph.add_node("chat_node",chat_node)
+    graph.add_edge(START,"chat_node")
+    graph.add_edge("chat_node",END)
 
-async def get_response(query: str)-> AsyncGenerator[str,None]:
-    """Returns a response to a given query"""
-    for message_chunk,_ in chatbot.stream(
-        {"messages": [HumanMessage(content = query)]},
-        stream_mode = "messages"
-    ):
-        
-        if message_chunk.content:
-            yield message_chunk.content
+    chatbot = graph.compile(checkpointer = checkpointer)
+    return chatbot
 
-
+chatbot = create_graph()

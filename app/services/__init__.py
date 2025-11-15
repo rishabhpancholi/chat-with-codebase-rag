@@ -1,4 +1,4 @@
 # Package Imports
-from .response_service import get_response
+from .response_service import chatbot
 
-__all__ = ["get_response"]
+__all__ = ["chatbot"]

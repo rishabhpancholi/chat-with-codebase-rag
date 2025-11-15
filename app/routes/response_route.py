@@ -1,20 +1,21 @@
 # General Imports
 from fastapi import APIRouter
-from fastapi.responses import StreamingResponse
+from langchain_core.messages import HumanMessage
 
 # Package Imports
 from app.models import ChatInput
-from app.services import get_response
+from app.services import chatbot
 
 response_router = APIRouter()
 
 @response_router.post("/respond")
-async def respond(input: ChatInput)->StreamingResponse:
+def respond(input: ChatInput)->dict:
     """Response endpoint for user's query"""
-    async def response_event():   
-        async for response_chunk in get_response(input.query):
-            if response_chunk:
-                yield response_chunk
 
-    return StreamingResponse(response_event(), media_type = "text/plain")
+    response = chatbot.invoke(
+        {"messages":[HumanMessage(content = input.query)]},
+        config = {"configurable": {"thread_id": input.thread_id}}
+    )
+
+    return {"response": response}
 

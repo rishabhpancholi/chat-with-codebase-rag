@@ -1,0 +1,10 @@
+[client]
+showErrorDetails = "none"
+
+[theme]
+base = "dark"
+primaryColor = "#FF3CFF"            # neon magenta for buttons / highlights
+backgroundColor = "#0B0C10"         # deep dark background
+secondaryBackgroundColor = "#1A1B2E" # sidebar, input boxes
+textColor = "#F5F5F5"               # light text for contrast
+font = "sans serif"
