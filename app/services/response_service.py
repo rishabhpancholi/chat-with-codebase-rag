@@ -12,7 +12,7 @@ from app.models import ChatState,chat_model
 def chat_node(state: ChatState)-> ChatState:
     """Takes user query and send it to LLM and returns response"""
     messages = state["messages"]
-    response = chat_model.invoke(messages).content
+    response = chat_model.invoke(messages)
     return {"messages": [AIMessage(content = response)]}
 
 def create_graph()-> StateGraph:
