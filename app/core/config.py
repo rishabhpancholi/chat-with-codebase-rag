@@ -9,6 +9,10 @@ class AppConfig(BaseSettings):
     postgres_password: str
     postgres_user: str
     postgres_db: str
+    langsmith_tracing: str
+    langsmith_endpoint: str
+    langsmith_api_key: str
+    langsmith_project: str
     model_config = SettingsConfigDict(env_file=".env")
 
 app_config = AppConfig()

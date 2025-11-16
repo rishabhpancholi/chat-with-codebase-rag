@@ -14,7 +14,11 @@ def respond(input: ChatInput)->dict:
 
     response = chatbot.invoke(
         {"messages":[HumanMessage(content = input.query)]},
-        config = {"configurable": {"thread_id": input.thread_id}}
+        config = {
+            "configurable": {"thread_id": input.thread_id},
+            "metadata": {"thread_id": input.thread_id},
+            "run_name": "chat_turn"
+        }
     )
 
     return {"response": response}

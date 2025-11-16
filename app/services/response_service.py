@@ -1,5 +1,6 @@
 # General Imports
 import psycopg
+from dotenv import load_dotenv
 from langchain_core.messages import AIMessage
 from langgraph.graph import StateGraph,START,END
 from langgraph.checkpoint.postgres import PostgresSaver
@@ -8,6 +9,8 @@ from langgraph.checkpoint.postgres import PostgresSaver
 # from app.core import app_config
 from app.core import app_config
 from app.models import ChatState,chat_model
+
+load_dotenv()
 
 def chat_node(state: ChatState)-> ChatState:
     """Takes user query and send it to LLM and returns response"""

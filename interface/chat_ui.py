@@ -22,6 +22,6 @@ def chat_interface():
                 def response_event():
                     for response_chunk in response_chunks:
                         yield response_chunk + " "
-                        time.sleep(0.1)
+                        time.sleep(0.05)
                 st.write_stream(response_event)
             st.session_state["messages"].append({"role": "assistant", "content": response["messages"][-1]["content"]})

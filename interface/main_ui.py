@@ -21,7 +21,7 @@ st.sidebar.title("Chat with your codebase RAG")
 if st.sidebar.button("New chat", key = "new_chat"):
     new_chat()
 
-
+st.sidebar.header("My conversations")
 if len(st.session_state["chat_threads"])==1:
     if st.sidebar.button("Resume Chat", key = f"resume_{st.session_state["thread_id"]}"):
         get_chat(st.session_state["thread_id"])
