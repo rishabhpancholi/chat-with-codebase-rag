@@ -16,7 +16,7 @@ def respond(input: ChatInput)->dict:
         {"messages":[HumanMessage(content = input.query)]},
         config = {
             "configurable": {"thread_id": input.thread_id},
-            "metadata": {"thread_id": input.thread_id},
+            "metadata": {"thread_id": input.thread_id, "vector_store": input.vector_store},
             "run_name": "chat_turn"
         }
     )
