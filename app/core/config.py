@@ -13,6 +13,8 @@ class AppConfig(BaseSettings):
     langsmith_endpoint: str
     langsmith_api_key: str
     langsmith_project: str
+    redis_url: str
+    qdrant_url: str
     model_config = SettingsConfigDict(env_file=".env")
 
 app_config = AppConfig()

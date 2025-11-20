@@ -3,8 +3,8 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 # Package Imports
-from app.exceptions import register_exception_handlers
-from app.routes import home_router,response_router,history_router,knowledge_router
+from app.core import register_exception_handlers
+from app.routes import home_router,response_router,history_router,knowledge_router,check_collection_router
 
 app = FastAPI(title = "Chat with your codebase RAG", description = "A chatbot that answers questions based on your codebase.", version = "1.0.0")
 
@@ -12,7 +12,8 @@ routers = [
     home_router,
     response_router,
     history_router,
-    knowledge_router
+    knowledge_router,
+    check_collection_router
 ]
 
 for router in routers:

@@ -12,14 +12,11 @@ def new_chat()-> None:
 def get_chat(thread_id: str)-> None:
     """Get the chat history for the selected thread_id"""
     chat_messages = []
-    try:
-        response = requests.get(f"http://127.0.0.1:8000/history?thread_id={thread_id}").json()
-    except Exception:
-        response = {"messages": []}
+    response = requests.get(f"http://127.0.0.1:8000/history?thread_id={thread_id}").json()
     
     st.session_state["thread_id"] = thread_id
     st.session_state["messages"] = []
-    chat_messages = response["messages"]
+    chat_messages = response.get("messages", [])
     for message in chat_messages:
         if message["type"] == "human":
             st.session_state["messages"].append({"role": "user", "content": message["content"]})
@@ -32,9 +29,14 @@ def delete_chat(thread_id: str)-> None:
     st.session_state["chat_threads"].remove(thread_id)
     st.rerun()
 
-# def build_knowledge_base(repo_name: str,repo_branch: str)-> dict:
-#     """Build the knowledge base for the selected repo_name and repo_branch"""
-#     response = requests.post("http://127.0.0.1:8000/knowledge", json = {"repo_name": repo_name, "repo_branch": repo_branch}).json()
-#     return response
+def build_knowledge_base(repo_name: str,repo_branch: str)-> None:
+    """Build the knowledge base for the selected repo_name and repo_branch"""
+    response = requests.post("http://127.0.0.1:8000/knowledge", json = {"repo_name": repo_name, "repo_branch": repo_branch}).json()
+    return response
+
+def collection_exists(repo_name: str,repo_branch: str)-> bool:
+    """Check if the collection exists for the selected repo_name and repo_branch"""
+    response = requests.post("http://127.0.0.1:8000/check_collection", json = {"repo_name": repo_name, "repo_branch": repo_branch}).json()
+    return response
     
         

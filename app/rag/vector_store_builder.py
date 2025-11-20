@@ -4,6 +4,7 @@ from langchain_qdrant import QdrantVectorStore
 from langchain_text_splitters.character import RecursiveCharacterTextSplitter,Language
 
 # Package Imports
+from app.core import app_config
 from app.models import embeddings_model
 
 class VectorStoreBuilder:
@@ -23,7 +24,7 @@ class VectorStoreBuilder:
         self.documents = documents
         self.repo_name = repo_name
         self.repo_branch = repo_branch
-        self.url = "http://localhost:6333/"
+        self.url = app_config.qdrant_url
         self.embedding = embeddings_model
 
     def build_vector_store(self)-> QdrantVectorStore:
